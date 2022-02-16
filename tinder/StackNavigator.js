@@ -5,6 +5,7 @@ import { Text, View } from 'react-native';
 import ChatScreen from './screens/ChatScreen';
 import HomeScreen from './screens/HomeScreen';
 import LoginScreen from './screens/LoginScreen';
+import ModalScreen from './screens/ModalScreen';
 
 import useAuth from './hooks/useAuth';
 
@@ -19,9 +20,14 @@ const StackNavigator = () => {
         headerShown: false,
       }}
     >
-      <Stack.Screen name='Home' component={HomeScreen} />
-      <Stack.Screen name='Chat' component={ChatScreen} />
-      <Stack.Screen name='Login' component={LoginScreen} />
+      <Stack.Group>
+        <Stack.Screen name='Home' component={HomeScreen} />
+        <Stack.Screen name='Chat' component={ChatScreen} />
+        <Stack.Screen name='Login' component={LoginScreen} />
+      </Stack.Group>
+      <Stack.Group screenOptions={{ presentation: 'modal' }}>
+        <Stack.Screen name='Modal' component={ModalScreen} />
+      </Stack.Group>
     </Stack.Navigator>
   );
 };

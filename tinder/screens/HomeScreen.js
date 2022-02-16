@@ -1,5 +1,5 @@
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import React, { useLayoutEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -37,12 +37,19 @@ const DUMMY_DATA = [
 export default function HomeScreen() {
   const tw = useTailwind();
   const navigation = useNavigation();
+  const swipeRef = useRef(null);
 
   // useLayoutEffect(() => {
   //   navigation.setOptions({
   //     headerShown: false,
   //   });
   // }, []);
+
+  // useLayoutEffect(() => {
+  //  onSnapshot
+  // }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <SafeAreaView style={tw('flex-1')}>
@@ -54,7 +61,7 @@ export default function HomeScreen() {
           />
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Modal')}>
           <Image style={tw('h-14 w-14 ')} source={require('../logo.png')} />
         </TouchableOpacity>
 
@@ -64,40 +71,87 @@ export default function HomeScreen() {
       </View>
       <View style={tw('flex-1 -mt-6')}>
         <Swiper
+          ref={swipeRef}
           containerStyle={{ backgroundColor: 'transparent' }}
           cards={DUMMY_DATA}
           stackSize={5}
           cardIndex={0}
           animateCardOpacity
           verticalSwipe={false}
-          renderCard={(card) => (
-            <View
-              key={card.id}
-              style={tw('relative bg-white h-3/4 rounded-xl  ')}
-            >
-              <Text>{card.firstName}</Text>
-              <Image
-                style={tw('absolute top-0 h-full w-full rounded-xl')}
-                source={{ uri: card.photoURL }}
-              />
+          onSwipedLeft={() => {
+            console.log('swipe PASS');
+          }}
+          onSwipedRight={() => {
+            console.log('swipe Match');
+          }}
+          overlayLabels={{
+            left: {
+              title: 'NOPE',
+              style: {
+                label: {
+                  textAlign: 'right',
+
+                  color: 'red',
+                },
+              },
+            },
+            right: {
+              title: 'MATCH',
+              style: {
+                label: {
+                  color: '#4DED30',
+                },
+              },
+            },
+          }}
+          renderCard={(card) =>
+            card ? (
+              <View
+                key={card.id}
+                style={tw('relative bg-white h-3/4 rounded-xl  ')}
+              >
+                <Text>{card.firstName}</Text>
+                <Image
+                  style={tw('absolute top-0 h-full w-full rounded-xl')}
+                  source={{ uri: card.photoURL }}
+                />
+                <View
+                  style={[
+                    tw(
+                      'absolute bottom-0 bg-white h-20 w-full justify-between items-center flex-row px-6 py-2 rounded-b-xl',
+                    ),
+                    styles.cardShadow,
+                  ]}
+                >
+                  <View>
+                    <Text style={tw('text-xl font-bold')}>
+                      {card.firstName} {card.lastName}
+                    </Text>
+                    <Text>{card.occupation}</Text>
+                  </View>
+                  <Text style={tw('text-2xl font-bold')}>{card.age}</Text>
+                </View>
+              </View>
+            ) : (
               <View
                 style={[
                   tw(
-                    'absolute bottom-0 bg-white h-20 w-full justify-between items-between flex-row px-6 py-2 rounded-b-xl',
+                    'relative bg-white h-3/4 rounded-xl  justify-center items-center',
                   ),
                   styles.cardShadow,
                 ]}
               >
-                <View>
-                  <Text style={tw('text-xl font-bold')}>
-                    {card.firstName} {card.lastName}
-                  </Text>
-                  <Text>{card.occupation}</Text>
-                </View>
-                <Text style={tw('text-2xl font-bold')}>{card.age}</Text>
+                <Text style={tw('font-bold pb-5')}>No more Profile</Text>
+
+                <Image
+                  style={tw('h-20 w-full')}
+                  height={100}
+                  width={100}
+                  source={{ uri: 'https://links.papareact.com/6gb' }}
+                />
               </View>
-            </View>
-          )}
+            )
+          }
         />
       </View>
 
@@ -110,13 +164,31 @@ export default function HomeScreen() {
         title='Go to Login screen'
         onPress={() => navigation.navigate('Login')}
       /> */}
+      <View style={tw('flex flex-row justify-evenly')}>
+        <TouchableOpacity
+          onPress={() => swipeRef.current.swipeLeft()}
+          style={tw(
+            'items-center justify-center rounded-full w-16 h-16 bg-red-200',
+          )}
+        >
+          <Entypo name='cross' color='red' size={24} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => swipeRef.current.swipeRight()}
+          style={tw(
+            'items-center justify-center rounded-full w-16 h-16 bg-green-200',
+          )}
+        >
+          <AntDesign name='heart' color='green' size={24} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   cardShadow: {
-    shadowColor: '$000',
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
       height: 1,
