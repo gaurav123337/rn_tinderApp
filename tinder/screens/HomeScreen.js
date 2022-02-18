@@ -51,6 +51,13 @@ export default function HomeScreen() {
 
   useEffect(() => {}, []);
 
+  const swipeLeft = (cardIndex) => {
+    console.log(cardIndex);
+  };
+  const swipeRight = (cardIndex) => {
+    console.log(cardIndex);
+  };
+
   return (
     <SafeAreaView style={tw('flex-1')}>
       <View style={tw('flex-row items-center justify-between px-5')}>
@@ -68,6 +75,14 @@ export default function HomeScreen() {
         <TouchableOpacity onPress={() => navigation.navigate('Chat')}>
           <Ionicons name='chatbubble-sharp' size={30} color='#FF5864' />
         </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Match')}>
+          <Ionicons name='chatbubble-sharp' size={30} color='#FF5864' />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => navigation.navigate('Message')}>
+          <Ionicons name='md-share-sharp' size={30} color='#FF5864' />
+        </TouchableOpacity>
       </View>
       <View style={tw('flex-1 -mt-6')}>
         <Swiper
@@ -78,11 +93,13 @@ export default function HomeScreen() {
           cardIndex={0}
           animateCardOpacity
           verticalSwipe={false}
-          onSwipedLeft={() => {
+          onSwipedLeft={(cardIndex) => {
             console.log('swipe PASS');
+            swipeLeft(cardIndex);
           }}
-          onSwipedRight={() => {
+          onSwipedRight={(cardIndex) => {
             console.log('swipe Match');
+            swipeRight(cardIndex);
           }}
           overlayLabels={{
             left: {
@@ -155,15 +172,6 @@ export default function HomeScreen() {
         />
       </View>
 
-      {/* <Text>I am a home screen</Text>
-      <Button
-        title='Go to chat screen'
-        onPress={() => navigation.navigate('Chat')}
-      />
-      <Button
-        title='Go to Login screen'
-        onPress={() => navigation.navigate('Login')}
-      /> */}
       <View style={tw('flex flex-row justify-evenly')}>
         <TouchableOpacity
           onPress={() => swipeRef.current.swipeLeft()}
